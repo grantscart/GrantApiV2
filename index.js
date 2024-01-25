@@ -53,7 +53,7 @@ app.get('/grant', (req, res) => {
 
 app.get('/papkitsu', (req, res) => {
   // Get a list of all image files in the "public" folder
-  const imageFiles = fs.readdirSync('./src/assets/papkitsu');
+  const imageFiles = fs.readdirSync('src/assets/papkitsu');
 
   // Generate a random index to select a random image file
   const randomIndex = Math.floor(Math.random() * imageFiles.length);
