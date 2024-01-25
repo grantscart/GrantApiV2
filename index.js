@@ -8,10 +8,12 @@ const app = express();
 const cors = require("cors");
 
 const BASE_URL = process.env.URL|| 'https://grantapi.cyclic.app';
-
+const imageFolderPath = path.join(__dirname, 'images');
 //ratelimit
 app.use(cors());
 app.set("json spaces", 2);
+
+
 
 //middleware
 app.use(cookieParser())
@@ -51,21 +53,24 @@ app.get('/grant', (req, res) => {
   });
 });
 
-app.get('/papkitsu', (req, res) => {
-  // Get a list of all image files in the "public" folder
-  const imageFiles = fs.readdirSync('/src/assets/papkitsu');
 
-  // Generate a random index to select a random image file
-  const randomIndex = Math.floor(Math.random() * imageFiles.length);
 
-  // Construct the URL of the random image file
-  const randomImageUrl = `/papkitsu/${imageFiles[randomIndex]}`;
+app.get('/papkits', (req, res) => {
+  // Read the contents of the image folder
+  const imageFiles = fs.readdirSync(imageFolderPath);
 
-  // Send a response with the random image file URL
-  res.json({
-    url: randomImageUrl
-  });
+  // Randomly select an image file
+  const randomImageFile = imageFiles[Math.floor(Math.random() * imageFiles.length)];
+
+  // Set content type for the response
+  res.setHeader('Content-Type', 'image/jpeg'); // Adjust content type based on your image format
+
+  // Send the selected image file as the response
+  const imagePath = path.join(imageFolderPath, randomImageFile);
+  const imageStream = fs.createReadStream(imagePath);
+  imageStream.pipe(res);
 });
+
 
 //errorhandler
 
